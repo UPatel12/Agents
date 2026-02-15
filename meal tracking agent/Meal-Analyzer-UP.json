@@ -1,0 +1,189 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "meal-ai",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        1280,
+        688
+      ],
+      "id": "20db62a2-46a3-42e0-8305-927b8c3a50f1",
+      "name": "Webhook",
+      "webhookId": "4d10001a-5461-4957-9ebf-84cb59ce160d",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Analyze the food in this image and return ONLY a JSON response in this exact format:\n\n{\n  \"food\": [\n    {\n      \"name\": \"dish name\",\n      \"quantity\": \"serving size\",\n      \"calories\": number,\n      \"protein\": number,\n      \"carbs\": number,\n      \"fat\": number\n    }\n  ],\n  \"total\": {\n    \"calories\": number,\n    \"protein\": number,\n    \"carbs\": number,\n    \"fat\": number\n  }\n}\n\nProvide estimated nutritional values. If multiple items are visible, list each separately in the food array and sum them in total.",
+        "hasOutputParser": true,
+        "options": {
+          "passthroughBinaryImages": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1472,
+        688
+      ],
+      "id": "f961aae4-2d8a-4c87-8bfa-501e931c5f31",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1376,
+        992
+      ],
+      "id": "47fee7e6-e2c6-44f8-b80a-4becc76f56a0",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "1TM2A952hbfvQtZZ",
+          "name": "OpenAi account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1824,
+        688
+      ],
+      "id": "effb1936-928a-4d75-92a6-52e23ba0a060",
+      "name": "Respond to Webhook",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"food\": [\n    {\n      \"name\": \"Pani Puri\",\n      \"quantity\": \"6 puris\",\n      \"calories\": 200,\n      \"protein\": 4,\n      \"carbs\": 30,\n      \"fat\": 7.5\n    }\n  ],\n  \"total\": {\n    \"calories\": 200,\n    \"protein\": 4,\n    \"carbs\": 30,\n    \"fat\": 7.5\n  }\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1648,
+        896
+      ],
+      "id": "ed14687a-2259-4aa1-991c-430e14e5151e",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1744,
+        1040
+      ],
+      "id": "9746db9f-f5c5-498c-a6ae-5bed85659e89",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "1TM2A952hbfvQtZZ",
+          "name": "OpenAi account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "c18efb1a-d1c9-45b2-b5e1-3aa883746875",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "09f0c2083c8d9a57f6a863e7a13b8939b619c4fcfcfa6a18d469403976b02e22"
+  },
+  "id": "MoqGKASJAqrchjuttYrcN",
+  "tags": []
+}
