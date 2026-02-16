@@ -4,9 +4,9 @@
 
 NutriSnap is a Next.js web application that analyzes food photos and provides instant nutritional breakdowns powered by AI. Simply snap a photo of your meal and get detailed macronutrient information along with a daily food diary to track your eating habits.
 
-![NutriSnap](/nutrisnap-interface.png)
+<img src="nutrisnap-interface.png" alt="NutriSnap Interface" width="600">
+<img src="n8n-workflow.png" alt="n8n" width="600">
 
-![n8n](/n8n-workflow.png)
 
 ---
 
